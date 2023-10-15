@@ -1,46 +1,55 @@
-import { useState } from "react";
-import MovieDb from "../MovieDb/MovieDb";
-import Card from 'react-bootstrap/Card';
-    
-const MovieList = () => {
-    const [data,setData]=useState("")
-    const [state,setstate]=useState(false)
-    const getGenre=(e:any)=>{
-        setData(e.target.value)
-        setstate(false)
-    }
-    const Mood:string[]=["Happy","Adventurous","Peaceful","Sad","Inspired"
+import React, { useRef } from 'react';
+import MovieDb from '../MovieDb/MovieDb';
+import { Card } from 'react-bootstrap';
+import { Vector3 } from 'three';
+import { useFrame } from '@react-three/fiber';
+import { Html, ScrollControls, Scroll, OrbitControls, Svg, TrackballControls, } from '@react-three/drei';
 
-    ]
-    const buttonClick=()=>{
-      setstate(true)
-    }
-  return (
-    <>
-    <input onChange={getGenre} type="text" placeholder="Genre"></input><button type="button" onClick={buttonClick}>GetMovie</button>
-    
-    { //map the items inside movieDb array of objects
-        MovieDb.map((itm)=>{
-         
-          //rendering the movie poster for each mood..
-          if(data=="Happy"){ 
-            if((itm.Genre.includes("Comedy"))&& state){ 
-              return <Card style={{ width: '18rem' }}>
-                <Card.Img variant="top" src={itm.Poster} /></Card>   
-            }
-           }          
-          if(data=="Adventurous"){
-            if((itm.Genre.includes("War")||(itm.Genre.includes("Thriller")))&& state){
-              return <Card style={{ width: '18rem' }}>
-                <Card.Img variant="top" src={itm.Poster} /></Card>
-            } 
-          }
-        })
-      }
-    </>
-    
-    
-  )
+interface MovieListProps {
+  data: string;
 }
+
+const MovieList: React.FC<MovieListProps> = (props) => {
+  const { data } = props;
+  const containerRef = useRef<THREE.Group>(null);
+  const posters: JSX.Element[] = [];
+  let xOffset = -1; // Adjust this value to control the horizontal spacing between posters
+  const zOffset = -10; // Adjust this value to control the vertical spacing between posters
+  let yOffset = 2;
+
+  useFrame(({ camera }) => {
+    if (containerRef.current) {
+      containerRef.current.lookAt(camera.position);
+    }
+  });
+
+  MovieDb.forEach((movie) => {
+    if ((data === 'Happy' && movie.Genre.includes('Comedy')) || (data === 'Adventurous' && (movie.Genre.includes('War') || movie.Genre.includes('Thriller')))) {
+      const position = new Vector3(xOffset, yOffset, zOffset);
+      posters.push(
+        <mesh key={movie.Title} position={position}>
+          
+          <Html>
+            <Card style={{ width: '18rem' }}>
+              <Card.Img variant="top" src={movie.Poster} />
+              
+              
+            </Card>
+          </Html>
+        </mesh>
+      );
+      xOffset += 2; // Adjust this value to control the horizontal spacing between posters
+     
+    }
+  });
+
+  return (
+    <ScrollControls>
+      <Scroll>
+        <group ref={containerRef}>{posters}</group>
+      </Scroll>
+    </ScrollControls>
+  );
+};
 
 export default MovieList;
