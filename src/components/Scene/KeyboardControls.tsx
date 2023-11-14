@@ -1,7 +1,7 @@
 import { KeyboardControls, KeyboardControlsEntry } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
-import Model from '../Model/Demon.jsx';
+import Model from '../Model/Demon.js';
 enum Controls {
   forward = 'forward',
   back = 'back',
