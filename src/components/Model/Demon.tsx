@@ -5,7 +5,7 @@ Command: npx gltfjsx@6.2.13 public/textures/Demon.gltf -o src/components/Demon.g
 
 import { useEffect, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
-function Model(props:any) {
+function Demon(props:any) {
   const group = useRef();
   const { nodes, materials, animations }:any = useGLTF("/textures/Demon.gltf");
  
@@ -73,4 +73,4 @@ useEffect(()=>{
 }
 
 useGLTF.preload("/textures/Demon.gltf");
-export default Model;
+export default Demon;

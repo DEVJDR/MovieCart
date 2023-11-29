@@ -1,21 +1,21 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { CameraControls, OrbitControls, RoundedBox } from '@react-three/drei';
+import { RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
-import MovieDb from '../DbList/MovieDb';
+import BooksDb from '../DbList/BookDb';
 import { useFrame } from '@react-three/fiber';
 
 interface MovieListProps {
-  data: string;
+  data: any;
 }
 
-const MovieList: React.FC<MovieListProps> = ({data}) => {
+const BookList: React.FC<MovieListProps> = ({data}) => {
   
- 
+  
   const [currentPosterIndex, setCurrentPosterIndex] = useState(0);
   const [visiblePosters, setVisiblePosters] = useState<JSX.Element[]>([]);
   const [showNextPoster, setShowNextPoster] = useState(false);
   const posters: JSX.Element[] = [];
- 
+
   const moveToNextPoster = () => {
     if (currentPosterIndex < posters.length) {
       setShowNextPoster(true);
@@ -26,7 +26,6 @@ const MovieList: React.FC<MovieListProps> = ({data}) => {
     (event: KeyboardEvent) => {
       if (event.key === 'Enter') {
         moveToNextPoster();
-        
       }
     },
     [currentPosterIndex]
@@ -43,15 +42,15 @@ const MovieList: React.FC<MovieListProps> = ({data}) => {
 
 
   useEffect(() => {
-    MovieDb.forEach((movie) => {
-      if (
-        (data === 'Happy' && movie.Genre.includes('Comedy')) ||
-        (data === 'Adventurous' && (movie.Genre.includes('War') || movie.Genre.includes('Thriller')))
-      ) {
-        const texture = textureLoader.load(movie.Poster);
+    BooksDb.forEach((book) => {
+      // if (
+      //   (data === 'Happy' && book.Genre.includes('Comedy')) ||
+      //   (data === 'Adventurous' && (book.Genre.includes('War') || book.Genre.includes('Thriller')))
+      // ) {
+        const texture = textureLoader.load(book.title);
 
         const poster = (
-          <mesh key={movie.Title}>
+          <mesh key={book.author}>
             <RoundedBox args={[1, 1, 1]} >
               <meshBasicMaterial map={texture} side={THREE.DoubleSide}  />
             </RoundedBox>
@@ -59,7 +58,7 @@ const MovieList: React.FC<MovieListProps> = ({data}) => {
         );
 
         posters.push(poster);
-      }
+      // }
     });
   }, [data, textureLoader]);
   const containerRef = useRef<THREE.Group>(null);
@@ -77,7 +76,7 @@ const MovieList: React.FC<MovieListProps> = ({data}) => {
     <group  ref={containerRef} >
       <mesh>
         <directionalLight castShadow  color={'orange'} position={[0,0,-3]}/>
-       <ambientLight intensity={1}/>
+       
         {visiblePosters}
         </mesh>
      
@@ -85,7 +84,7 @@ const MovieList: React.FC<MovieListProps> = ({data}) => {
   );
 };
 
-export default MovieList;
+export default BookList;
 
 
 

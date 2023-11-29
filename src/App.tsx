@@ -1,22 +1,16 @@
 import { Canvas } from '@react-three/fiber';
-import { CameraControls, Html, OrbitControls } from '@react-three/drei';
 import Scene from './components/Scene/Scene';
 import "./index.css"
-import MovieDb from './components/MovieDb/MovieDb';
-
 import { Suspense } from 'react';
-import MovieList from './components/MovieBox/MovieBox'
-
-
+import { Html} from '@react-three/drei';
 
 
 function App(){
   return(
     <>
-    <Canvas camera={{position:[0,0,5] ,fov:40}} shadows  >
-    <Suspense>
-   
-     <Scene/> 
+    <Canvas camera={{position:[0,0,10] ,fov:40}} shadows  >
+    <Suspense fallback={<Html><p>vdjbh</p></Html>}>
+   <Scene/>
     </Suspense>
       
     </Canvas>
